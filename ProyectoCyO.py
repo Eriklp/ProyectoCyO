@@ -12,21 +12,24 @@ class panelInicio(wx.Panel):
 
         self.logger = wx.TextCtrl(self, pos=(300,20), size=(450,420), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
-        self.botonCargar =wx.Button(self, label="Cargar", pos=(178 , 100), size = (80, 30))
+        self.botonCargar =wx.Button(self, label="Cargar", pos=(178 , 90), size = (80, 30))
         self.Bind(wx.EVT_BUTTON, self.ClickCargar, self.botonCargar)
 
-        self.lblnum = wx.StaticText(self, label="Seleccionar Archivo :", pos=(10,100))
+        self.lblSeleccionar = wx.StaticText(self, label="Seleccionar Archivo :", pos=(10,90))
 
-        self.lblproc = wx.StaticText(self, label="Numero de parcelas :", pos=(80, 140))
+        self.lblproc = wx.StaticText(self, label="Numero de parcelas :", pos=(10, 130))
+        self.NumParcelas = wx.TextCtrl(self, value= '', pos=(150, 130), size=(75, 30))
 
-        self.lblnomproc = wx.StaticText(self, label = 'nombre: ', pos = (10, 160))
-        self.nomProc = wx.TextCtrl(self, value = '', pos = (10, 180), size = (120, -1))
-        self.lblhoraini = wx.StaticText(self, label = 'Hora inicio: ', pos = (135, 160))
-        self.horaini = wx.TextCtrl(self, value = '', pos = (135, 180), size = (75, -1))
-        self.lblhorafin = wx.StaticText(self, label = 'Hora fin: ', pos = (220, 160))
-        self.horafin = wx.TextCtrl(self, value = '', pos = (220, 180), size = (75, -1))
+        self.lblTiemposDuracion = wx.StaticText(self, label = 'Tiempos de duración: ', pos = (10, 160))
+        self.TiemposDuracion = wx.TextCtrl(self, value = '', pos = (150, 160), size = (120, 30))
 
-        self.buttonAgg = wx.Button(self, label = 'añadir', pos = (110, 210), size = (75, -1))
+        self.lblSumaTiempos = wx.StaticText(self, label = 'Suma de los tiempos: ', pos = (10, 190))
+        self.SumaTiempos = wx.TextCtrl(self, value = '', pos = (150, 190), size = (75, 30))
+
+        self.lblhorafin = wx.StaticText(self, label = 'Hora fin: ', pos = (10, 220))
+        self.horafin = wx.TextCtrl(self, value = '', pos = (220, 180), size = (75, 30))
+
+        self.buttonAgg = wx.Button(self, label = 'añadir', pos = (110, 210), size = (75, 30))
         self.Bind(wx.EVT_BUTTON, self.ClickAnadir, self.buttonAgg)
 
         self.buttonInge = wx.Button(self, label = 'Solucion Ingenua o Exhaustiva', pos = (45, 260))
