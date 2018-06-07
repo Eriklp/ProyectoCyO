@@ -12,13 +12,12 @@ class panelInicio(wx.Panel):
 
         self.logger = wx.TextCtrl(self, pos=(300,20), size=(450,420), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
-        self.botonCargar =wx.Button(self, label="Cargar", pos=(240, 100), size = (50, 30))
+        self.botonCargar =wx.Button(self, label="Cargar", pos=(178 , 100), size = (80, 30))
         self.Bind(wx.EVT_BUTTON, self.ClickCargar, self.botonCargar)
 
-        self.lblnum = wx.StaticText(self, label="Numero de procedimientos :", pos=(10,100))
-        self.numProc = wx.TextCtrl(self, value="", pos=(195, 100), size=(40,-1))
+        self.lblnum = wx.StaticText(self, label="Seleccionar Archivo :", pos=(10,100))
 
-        self.lblproc = wx.StaticText(self, label="Procedimiento # :", pos=(95, 140))
+        self.lblproc = wx.StaticText(self, label="Numero de parcelas :", pos=(80, 140))
 
         self.lblnomproc = wx.StaticText(self, label = 'nombre: ', pos = (10, 160))
         self.nomProc = wx.TextCtrl(self, value = '', pos = (10, 180), size = (120, -1))
@@ -41,40 +40,37 @@ class panelInicio(wx.Panel):
         self.buttonDim.Disable()
 
         #parte de abrir archivos ¬¬
-        self.buttonArchivo = wx.Button(self, label = 'archivo', pos = (8, 132))
-        self.Bind(wx.EVT_BUTTON, self.ClickArchivo, self.buttonArchivo)
+        #self.buttonArchivo = wx.Button(self, label = 'archivo', pos = (8, 132))
+        #self.Bind(wx.EVT_BUTTON, self.ClickArchivo, self.buttonArchivo)
         #fin de parte de abrir archivo ¬¬
-    def ClickArchivo(self, event):
-        archivo = open("procedimientos.txt", "r")
-        linea1 = archivo.readline()
-        global numeroProcedimientos
-        numeroProcedimientos = int(linea1)
-        lineas = archivo.readlines()
-        global ListProc
-        for i  in range(0, len(lineas), 1):
-            lin = lineas[i].split(' ')
-            ListProc.append(lin)
-        for i in range(numeroProcedimientos):
-            ListProc[i][2] = ListProc[i][2].replace('\n', '')
-        for i in range(numeroProcedimientos):
-            for j in range(1, 3):
-                ListProc[i][j] = time.strptime(ListProc[i][j], "%H:%M")
-        self.buttonInge.Enable()
-        self.buttonVor.Enable()
-        self.buttonDim.Enable()
-        self.buttonAgg.Disable()
-        self.buttonOk.Disable()
-        self.numProc.SetValue(str(numeroProcedimientos))
-        self.numProc.SetEditable(False)
-        self.numProc.Disable()
+    # def ClickArchivo(self, event):
+        
+    #     global numeroProcedimientos
+        
+    #         ListProc[i][2] = ListProc[i][2].replace('\n', '')
+    #     self.buttonInge.Enable()
+    #     self.buttonVor.Enable()
+    #     self.buttonDim.Enable()
+    #     self.buttonAgg.Disable()
+    #     self.buttonOk.Disable()
+    #     self.numProc.SetValue(str(numeroProcedimientos))
+    #     self.numProc.SetEditable(False)
+    #     self.numProc.Disable()
     def ClickCargar(self,event):
         openFileDialog = wx.FileDialog(self, "Open", "", "", "Text files (*.txt)|*.txt", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         openFileDialog.ShowModal()
         ruta = openFileDialog.GetPath()
-        print ruta
         self.logger.SetValue("ruta del archivo: " + ruta + '\n')
-        #self.lblproc.SetLabel('Procedimiento: 0')
-        self.numProc.SetEditable(False)
+        archivo = open(ruta, "r")
+        NumeroDeParcelas = int(archivo.readline())
+        tiemposdeduraciondeparcelas = archivo.readline().split(" ")
+        TiemposDeDuracionDeParcelas = []
+        for i in tiemposdeduraciondeparcelas:
+            TiemposDeDuracionDeParcelas.append(int(i))
+        self.logger.AppendText("Numero De Parcelas: " + str(NumeroDeParcelas) + "\n" + "Tiempos de duracion: " + str(TiemposDeDuracionDeParcelas))
+
+
+
     def ClickAnadir(self, event):
         global numeroProcedimientos
         global np
