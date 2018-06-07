@@ -5,14 +5,15 @@ import time
 
 
 class panelInicio(wx.Panel):
+    
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.quote = wx.StaticText(self, label="integrantes: \n Erik López - 1430406 \n Alejandro Valencia R - 14----- \n Juan Jose Varela - 14-----", pos=(10, 10))
 
-        self.logger = wx.TextCtrl(self, pos=(300,20), size=(400,350), style=wx.TE_MULTILINE | wx.TE_READONLY)
+        self.logger = wx.TextCtrl(self, pos=(300,20), size=(450,420), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
-        self.buttonOk =wx.Button(self, label="OK", pos=(240, 100), size = (50, 30))
-        self.Bind(wx.EVT_BUTTON, self.CLickOk, self.buttonOk)
+        self.botonCargar =wx.Button(self, label="Cargar", pos=(240, 100), size = (50, 30))
+        self.Bind(wx.EVT_BUTTON, self.ClickCargar, self.botonCargar)
 
         self.lblnum = wx.StaticText(self, label="Numero de procedimientos :", pos=(10,100))
         self.numProc = wx.TextCtrl(self, value="", pos=(195, 100), size=(40,-1))
@@ -66,13 +67,13 @@ class panelInicio(wx.Panel):
         self.numProc.SetValue(str(numeroProcedimientos))
         self.numProc.SetEditable(False)
         self.numProc.Disable()
-    def CLickOk(self,event):
-        global numeroProcedimientos
-        numeroProcedimientos = int(self.numProc.GetValue())
-        global ListProc
-        ListProc = [range(3) for i in range(numeroProcedimientos)]
-        self.logger.SetValue("numero de procedimientos: " + str(numeroProcedimientos) + '\n')
-        self.lblproc.SetLabel('Procedimiento: 0')
+    def ClickCargar(self,event):
+        openFileDialog = wx.FileDialog(self, "Open", "", "", "Text files (*.txt)|*.txt", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+        openFileDialog.ShowModal()
+        ruta = openFileDialog.GetPath()
+        print ruta
+        self.logger.SetValue("ruta del archivo: " + ruta + '\n')
+        #self.lblproc.SetLabel('Procedimiento: 0')
         self.numProc.SetEditable(False)
     def ClickAnadir(self, event):
         global numeroProcedimientos
