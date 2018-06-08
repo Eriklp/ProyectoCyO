@@ -8,39 +8,31 @@ class panelInicio(wx.Panel):
     
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        self.quote = wx.StaticText(self, label="integrantes: \n Erik López - 1430406 \n Alejandro Valencia R - 14----- \n Juan Jose Varela - 14-----", pos=(10, 10))
+        self.quote = wx.StaticText(self, label="integrantes: \n Erik López - 1430406 \n Alejandro Valencia R - 1427368 \n Juan Jose Varela - 1424388", pos=(10, 10))
 
         self.logger = wx.TextCtrl(self, pos=(300,20), size=(450,420), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
-        self.botonCargar =wx.Button(self, label="Cargar", pos=(178 , 90), size = (80, 30))
+        self.botonCargar = wx.Button(self, label="Cargar Datos", pos=(178 , 90), size = (85, 30))
         self.Bind(wx.EVT_BUTTON, self.ClickCargar, self.botonCargar)
 
         self.lblSeleccionar = wx.StaticText(self, label="Seleccionar Archivo :", pos=(10,90))
 
-        self.lblproc = wx.StaticText(self, label="Numero de parcelas :", pos=(10, 130))
-        self.NumParcelas = wx.TextCtrl(self, value= '', pos=(150, 130), size=(75, 30))
+        self.lblNumParcelas = wx.StaticText(self, label="Numero de parcelas :", pos=(10, 130))
+        self.NumParcelas = wx.TextCtrl(self, value= '', pos=(150, 130), size=(120, 30))
 
-        self.lblTiemposDuracion = wx.StaticText(self, label = 'Tiempos de duración: ', pos = (10, 160))
-        self.TiemposDuracion = wx.TextCtrl(self, value = '', pos = (150, 160), size = (120, 30))
+        self.lblTiemposDuracion = wx.StaticText(self, label = 'Tiempos de duración: ', pos = (10, 165))
+        self.TiemposDuracion = wx.TextCtrl(self, value = '', pos = (150, 165), size = (120, 30))
 
-        self.lblSumaTiempos = wx.StaticText(self, label = 'Suma de los tiempos: ', pos = (10, 190))
-        self.SumaTiempos = wx.TextCtrl(self, value = '', pos = (150, 190), size = (75, 30))
+        self.lblSumaTiempos = wx.StaticText(self, label = 'Suma de los tiempos: ', pos = (10, 200))
+        self.SumaTiempos = wx.TextCtrl(self, value = '', pos = (150, 200), size = (120, 30))
 
-        self.lblhorafin = wx.StaticText(self, label = 'Hora fin: ', pos = (10, 220))
-        self.horafin = wx.TextCtrl(self, value = '', pos = (220, 180), size = (75, 30))
+        self.lblUtilidadesDePacelas = wx.StaticText(self, label = 'Utilidades De Las Parcelas: ', pos = (10, 240))
+        self.UtilidadesDeParcelas = wx.TextCtrl(self, value = '', pos = (50, 260), size = (200, 120), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
-        self.buttonAgg = wx.Button(self, label = 'añadir', pos = (110, 210), size = (75, 30))
-        self.Bind(wx.EVT_BUTTON, self.ClickAnadir, self.buttonAgg)
+        self.buttonAceptar = wx.Button(self, label = 'Solucionar', pos = (110, 390), size = (75, 30))
+        self.Bind(wx.EVT_BUTTON, self.ClickAceptar, self.buttonAceptar)
 
-        self.buttonInge = wx.Button(self, label = 'Solucion Ingenua o Exhaustiva', pos = (45, 260))
-        self.Bind(wx.EVT_BUTTON, self.ClickIngenuo, self.buttonInge)
-        self.buttonInge.Disable()
-        self.buttonVor = wx.Button(self, label = 'Solucion Voraz', pos = (95, 290))
-        self.Bind(wx.EVT_BUTTON, self.ClickVoraz, self.buttonVor)
-        self.buttonVor.Disable()
-        self.buttonDim = wx.Button(self, label = 'Solucion Dinámica', pos = (85, 320))
-        self.Bind(wx.EVT_BUTTON, self.ClickDinamico, self.buttonDim)
-        self.buttonDim.Disable()
+        #self.buttonDim.Disable()
 
         #parte de abrir archivos ¬¬
         #self.buttonArchivo = wx.Button(self, label = 'archivo', pos = (8, 132))
@@ -66,15 +58,20 @@ class panelInicio(wx.Panel):
         self.logger.SetValue("ruta del archivo: " + ruta + '\n')
         archivo = open(ruta, "r")
         NumeroDeParcelas = int(archivo.readline())
+        self.NumParcelas.SetValue(str(NumeroDeParcelas))
         tiemposdeduraciondeparcelas = archivo.readline().split(" ")
         TiemposDeDuracionDeParcelas = []
         for i in tiemposdeduraciondeparcelas:
             TiemposDeDuracionDeParcelas.append(int(i))
         self.logger.AppendText("Numero De Parcelas: " + str(NumeroDeParcelas) + "\n" + "Tiempos de duracion: " + str(TiemposDeDuracionDeParcelas))
+        self.TiemposDuracion.SetValue(str(TiemposDeDuracionDeParcelas))
+        SumaDeLosTiempos = int(archivo.readline())
+        self.SumaTiempos.SetValue(str(SumaDeLosTiempos))
+        #for linea in range(0, NumeroDeParcelas):
 
 
 
-    def ClickAnadir(self, event):
+    def ClickAceptar(self, event):
         global numeroProcedimientos
         global np
         if np < numeroProcedimientos:
