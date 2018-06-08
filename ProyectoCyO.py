@@ -30,7 +30,7 @@ class panelInicio(wx.Panel):
         self.UtilidadesDeParcelas = wx.TextCtrl(self, value = '', pos = (50, 260), size = (200, 120), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
         self.buttonAceptar = wx.Button(self, label = 'Solucionar', pos = (110, 390), size = (75, 30))
-        self.Bind(wx.EVT_BUTTON, self.ClickAceptar, self.buttonAceptar)
+        self.Bind(wx.EVT_BUTTON, self.ClickSolucionar, self.buttonAceptar)
 
         #self.buttonDim.Disable()
 
@@ -63,15 +63,28 @@ class panelInicio(wx.Panel):
         TiemposDeDuracionDeParcelas = []
         for i in tiemposdeduraciondeparcelas:
             TiemposDeDuracionDeParcelas.append(int(i))
-        self.logger.AppendText("Numero De Parcelas: " + str(NumeroDeParcelas) + "\n" + "Tiempos de duracion: " + str(TiemposDeDuracionDeParcelas))
+        info = "Numero De Parcelas: " + str(NumeroDeParcelas) + "\n" + "Tiempos de duracion: " + str(TiemposDeDuracionDeParcelas) + "\n"
         self.TiemposDuracion.SetValue(str(TiemposDeDuracionDeParcelas))
         SumaDeLosTiempos = int(archivo.readline())
         self.SumaTiempos.SetValue(str(SumaDeLosTiempos))
-        #for linea in range(0, NumeroDeParcelas):
+        info += "Suma de los tiempos: " + str(SumaDeLosTiempos) + "\n"
+        matrizUtilidad = []
+        matrizUtilidadMostrar = ""
+        for i in range(0, NumeroDeParcelas):
+            linea = archivo.readline().split(' ')
+            matrizUtilidad.append([])
+            for j in range(0,SumaDeLosTiempos):
+                matrizUtilidad[i].append(int(linea[j]))
+                matrizUtilidadMostrar += linea[j]
+                if j < SumaDeLosTiempos:
+                    matrizUtilidadMostrar += " "
+            #matrizUtilidadMostrar += "\n" 
 
+        self.UtilidadesDeParcelas.SetValue(matrizUtilidadMostrar)
+        info += "Utilidades de las parcelas: \n" + matrizUtilidadMostrar
+        self.logger.SetValue(info)
 
-
-    def ClickAceptar(self, event):
+    def ClickSolucionar(self, event):
         global numeroProcedimientos
         global np
         if np < numeroProcedimientos:
@@ -364,6 +377,6 @@ frame = wx.Frame(None, title="Proyecto CyO", size=(780,520))
 nb = wx.Notebook(frame)
 # Añadimos los paneles con Addpage
 nb.AddPage(panelInicio(nb), "Inicio")
-nb.AddPage(panelResultado(nb), "Resultados")
+#nb.AddPage(panelResultado(nb), "Resultados")
 frame.Show()
 app.MainLoop()
