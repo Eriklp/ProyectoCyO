@@ -68,10 +68,12 @@ class panelInicio(wx.Panel):
         matrizUtilidadMostrar = ""
         for i in range(0, NumeroDeParcelas):
             linea = archivo.readline().split(' ')
+            #print(linea)
             matrizUtilidad.append([])
             for j in range(0,SumaDeLosTiempos):
                 matrizUtilidad[i].append(int(linea[j]))
                 matrizUtilidadMostrar += linea[j]
+                #print(matrizUtilidadMostrar, '- ', j)
                 if j < (SumaDeLosTiempos - 1):
                     matrizUtilidadMostrar += " "
 
@@ -87,13 +89,14 @@ class panelInicio(wx.Panel):
             #print(tiempoduracionparcelas)
             TiemposDuracionParcelas = []
             for i in range(0, len(tiempoduracionparcelas)):
-                print(TiemposDuracionParcelas)
+                #print(TiemposDuracionParcelas)
                 TiemposDuracionParcelas.append(int(tiempoduracionparcelas[i]))
             ##print(TiemposDuracionParcelas)
 
             sumaTiemposPacerlas = int(self.SumaTiempos.GetValue())
 
-            matrizTextoEntrada =str(self.UtilidadesDeParcelas.GetValue()).split('\n')
+            matrizTextoEntrada =str(self.UtilidadesDeParcelas.GetValue()).split('\r\n')
+            print(matrizTextoEntrada)
             matrizUtilidades = []
             for i in range(0, numeroParcelas):
                temp = matrizTextoEntrada[i].split(' ')
@@ -101,7 +104,7 @@ class panelInicio(wx.Panel):
                for j in range(0, len(TiemposDuracionParcelas)):
                 matrizUtilidades[i].append(int(temp[j]))
 
-            ##print(matrizUtilidades)
+            print(matrizUtilidades)
             
    
 
