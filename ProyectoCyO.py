@@ -10,7 +10,7 @@ def GuardarEnArchivo(texto, nombre):
 
 
 class panelInicio(wx.Panel):
-    
+
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.quote = wx.StaticText(self, label="integrantes: \n Erik López - 1430406 \n Alejandro Valencia R - 1427368 \n Juan Jose Varela - 1424388", pos=(10, 10))
@@ -37,8 +37,8 @@ class panelInicio(wx.Panel):
         self.buttonSolucionar = wx.Button(self, label = 'Solucionar', pos = (110, 390), size = (75, 30))
         self.Bind(wx.EVT_BUTTON, self.ClickSolucionar, self.buttonSolucionar)
 
-    
-    
+
+
 
 
     def ClickCargar(self,event):
@@ -84,7 +84,7 @@ class panelInicio(wx.Panel):
 
     def ClickSolucionar(self, event):
             numeroParcelas = int(self.NumParcelas.GetValue())
-            
+
             tiempoduracionparcelas = str(self.TiemposDuracion.GetValue()).split(' ')
             #print(tiempoduracionparcelas)
             TiemposDuracionParcelas = []
@@ -96,21 +96,21 @@ class panelInicio(wx.Panel):
             sumaTiemposParcelas = int(self.SumaTiempos.GetValue())
 
             matrizTextoEntrada =str(self.UtilidadesDeParcelas.GetValue()).split('\n')
-            
+
             matrizUtilidades = []
             for i in range(0, numeroParcelas):
                temp = matrizTextoEntrada[i].split(' ')
                matrizUtilidades.append([])
                for j in range(0, sumaTiemposParcelas):
                 matrizUtilidades[i].append(int(temp[j]))
-            
+
 
             numeroDeParcelas = numeroParcelas
             duracionCosecha = sumaTiemposParcelas
             D = TiemposDuracionParcelas
 
             U = matrizUtilidades
-            
+
             cosecha = LpProblem('Cosecha', LpMaximize)
 
             X = [[ pulp.LpVariable('X_%s_%s'%(i,j), lowBound=0, upBound=1, cat="Integer") for j in range(duracionCosecha)] for i in range(numeroDeParcelas)]
@@ -138,14 +138,15 @@ class panelInicio(wx.Panel):
                             y1 = pulp.LpVariable('Y1_%s_%s_%s'%(i,j,fila), lowBound=0, upBound=1, cat="Integer")
                             y2 = pulp.LpVariable('Y2_%s_%s_%s'%(i,j,fila), lowBound=0, upBound=1, cat="Integer")
                             restriccion = [X[fila][columna]*(columna + 1) for columna in range(duracionCosecha)]
-                            cosecha += X[i][j]*((j + 2) + D[i] - 1) <= lpSum(restriccion) + 100*(1 - y1)
-                            cosecha += X[i][j]*j >= lpSum(restriccion) - 100*(1 - y2)
+                            cosecha += X[i][j]*((j + 2) + D[i] - 1) <= lpSum(restriccion) + (2*duracionCosecha)*(1 - y1)
+                            cosecha += X[i][j]*j >= lpSum(restriccion) - (2*duracionCosecha)*(1 - y2)
                             cosecha += y1 + y2 == 1
 
             cosecha.solve()
 
             print(cosecha)
 
+            """
             for v in cosecha.variables():
                 print '\t', v.name, '=', v.varValue
             print '\n'
@@ -156,10 +157,18 @@ class panelInicio(wx.Panel):
                 for dato in v:
                     print '\t',dato.name, '=', dato.varValue
             print '\n'
+            """
+
+            info = 'Variables de decision: \n\n'
+            for v in X:
+                for dato in v:
+                    info += '\t' + dato.name +  '=' +  str(dato.varValue) + '\n'
+            print '\n'
+            self.logger.SetValue(info)
 
 
 
-            
+
 
 
 
