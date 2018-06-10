@@ -78,7 +78,7 @@ class panelInicio(wx.Panel):
         self.UtilidadesDeParcelas.SetValue(matrizUtilidadMostrar)
         info += "Utilidades de las parcelas: \n" + matrizUtilidadMostrar
         self.logger.SetValue(info)
-        GuardarEnArchivo(info, matrizUtilidadMostrar)
+        ##GuardarEnArchivo(info, matrizUtilidadMostrar)
 
     def ClickSolucionar(self, event):
             numeroParcelas = int(self.NumParcelas.GetValue())
