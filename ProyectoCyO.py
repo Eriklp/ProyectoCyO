@@ -3,6 +3,11 @@
 import wx
 import time
 
+def GuardarEnArchivo(texto, nombre):
+    archivo = open(nombre+'.txt', 'w')
+    archivo.write(texto)
+    archivo.close()
+
 
 class panelInicio(wx.Panel):
     
@@ -32,7 +37,10 @@ class panelInicio(wx.Panel):
         self.buttonSolucionar = wx.Button(self, label = 'Solucionar', pos = (110, 390), size = (75, 30))
         self.Bind(wx.EVT_BUTTON, self.ClickSolucionar, self.buttonSolucionar)
 
-     
+    
+    
+
+
     def ClickCargar(self,event):
         openFileDialog = wx.FileDialog(self, "Open", "", "", "Text files (*.txt)|*.txt", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         openFileDialog.ShowModal()
@@ -70,6 +78,7 @@ class panelInicio(wx.Panel):
         self.UtilidadesDeParcelas.SetValue(matrizUtilidadMostrar)
         info += "Utilidades de las parcelas: \n" + matrizUtilidadMostrar
         self.logger.SetValue(info)
+        GuardarEnArchivo(info, matrizUtilidadMostrar)
 
     def ClickSolucionar(self, event):
             numeroParcelas = int(self.NumParcelas.GetValue())
@@ -94,7 +103,7 @@ class panelInicio(wx.Panel):
 
             ##print(matrizUtilidades)
             
-    
+   
 
 
 
