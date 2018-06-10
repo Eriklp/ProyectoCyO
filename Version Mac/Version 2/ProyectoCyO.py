@@ -163,21 +163,8 @@ class panelInicio(wx.Panel):
                         cosecha += P[i] >= P[parcela] - (2*duracionCosecha)*(1 - y2)
                         cosecha += y1 + y2 == 1
                         indice = indice + 1;
+
             cosecha.solve()
-
-
-            print(cosecha)
-
-            for v in cosecha.variables():
-                print '\t', v.name, '=', v.varValue
-            print '\n'
-
-            print '-------------------------\n'
-
-            for v in X:
-                for dato in v:
-                    print '\t',dato.name, '=', dato.varValue
-            print '\n'
 
             info = 'Variables de decision: \n\n'
             for v in X:
