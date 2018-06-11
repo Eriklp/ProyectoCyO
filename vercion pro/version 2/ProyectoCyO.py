@@ -166,25 +166,38 @@ class panelInicio(wx.Panel):
             print(cosecha)
             
 
-            for v in cosecha.variables():
-                print '\t', v.name, '=', v.varValue
-            print '\n'
-
-            print '-------------------------\n'
-
-            for v in X:
-                for dato in v:
-                    print '\t',dato.name, '=', dato.varValue
-            print '\n'
-
             info = 'Variables de decision: \n\n'
+            textoArchivo = ''
             for v in X:
                 for dato in v:
                     info += '\t' + dato.name +  '=' +  str(dato.varValue) + '\n'
-            print '\n'
+            for v in P:
+                info += '\t' + v.name +  '=' +  str(v.varValue) + '\n'
 
-            print "se demoro: " + str(tiempo_ejecucion)
+
+            resultadoCosecha = []
+            sumaDeUtilidades = 0
+            indiceParcela = 0;
+
+            for i in P:
+                dato = i.varValue
+                resultadoCosecha.append(int(dato))
+                sumaDeUtilidades = sumaDeUtilidades + U[indiceParcela][int(dato)]
+                indiceParcela = indiceParcela + 1;
+
+
+
+            str1 = ' '.join(str(e) for e in resultadoCosecha)
+            info += '\nSuma Utilidades: ' + str(sumaDeUtilidades) + '\n'
+            info += 'Tiempos Cosechas ' + str1 + '\n'
+            info += 'Tiempo Ejecución: ' + str(tiempo_ejecucion*1000) + 'ms'
+
+            textoArchivo = str(sumaDeUtilidades) + '\n' + str1
+
+            GuardarEnArchivo(textoArchivo, 'SalidaResultados')
+
             self.logger.SetValue(info)
+
 
 
 
