@@ -13,14 +13,14 @@ class panelInicio(wx.Panel):
 
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        self.quote = wx.StaticText(self, label="integrantes: \n Erik López - 1430406 \n Alejandro Valencia R - 1427368 \n Juan Jose Varela - 1424388", pos=(10, 10))
+        self.quote = wx.StaticText(self, label="integrantes: \n Erik López - 1430406 \n Alejandro Valencia R - 1427368 \n Juan Jose Varela - 1424388 \n Edgar Mauricio Ceron Florez - 1427918", pos=(10, 10))
 
         self.logger = wx.TextCtrl(self, pos=(300,20), size=(450,420), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
-        self.botonCargar = wx.Button(self, label="Cargar Datos", pos=(178 , 90), size = (85, 30))
+        self.botonCargar = wx.Button(self, label="Cargar Datos", pos=(178 , 95), size = (85, 30))
         self.Bind(wx.EVT_BUTTON, self.ClickCargar, self.botonCargar)
 
-        self.lblSeleccionar = wx.StaticText(self, label="Seleccionar Archivo :", pos=(10,90))
+        self.lblSeleccionar = wx.StaticText(self, label="Seleccionar Archivo :", pos=(10,95))
 
         self.lblNumParcelas = wx.StaticText(self, label="Numero de parcelas :", pos=(10, 130))
         self.NumParcelas = wx.TextCtrl(self, value= '', pos=(150, 130), size=(120, 30))
@@ -100,16 +100,15 @@ class panelInicio(wx.Panel):
             matrizUtilidades = []
             indice = 0;
             for i in range(0, numeroParcelas + (numeroParcelas - 1)):
-                print 'Matriz: ', matrizTextoEntrada[i]
+
                 if matrizTextoEntrada[i] != '':
                     temp = matrizTextoEntrada[i].split(' ')
                     matrizUtilidades.append([])
                     for j in range(0, sumaTiemposParcelas):
-                        print 'j: ', j, '- temp: ', temp[j], '- i: ', i
                         matrizUtilidades[indice].append(int(temp[j]))
                     indice = indice + 1;
 
-
+            tiempoInicio = time.time()
             numeroDeParcelas = numeroParcelas
             duracionCosecha = sumaTiemposParcelas
             D = TiemposDuracionParcelas
@@ -133,7 +132,7 @@ class panelInicio(wx.Panel):
 
             for i in range(numeroDeParcelas):
                 for j in range(duracionCosecha):
-                    cosecha += X[i][j]*(j + D[i] - 1) <= duracionCosecha - D[i]
+                    cosecha += X[i][j]*(j + D[i] - 1) <= duracionCosecha - D[i] + 1
             """"
             for i in range(numeroDeParcelas):
                 for j in range(duracionCosecha - D[i] + 1):
@@ -150,12 +149,13 @@ class panelInicio(wx.Panel):
             for i in range(numeroDeParcelas):
                 for parcela in range(numeroParcelas):
                     if i != parcela:
-                        restriccion = [X[i][columna]*(columna) for columna in range(duracionCosecha)]
+                        restriccion = [(X[i][columna])*(columna) for columna in range(duracionCosecha)]
                         cosecha += P[i] == lpSum(restriccion)
 
             indice = 0
+
             for i in range(numeroDeParcelas):
-                for parcela in range(numeroParcelas):
+                for parcela in range(numeroDeParcelas):
                     if i != parcela:
                         y1 = pulp.LpVariable('Y1_%s_%s_%s'%(i,parcela, indice), lowBound=0, upBound=1, cat="Integer")
                         y2 = pulp.LpVariable('Y2_%s_%s_%s'%(i,parcela, indice), lowBound=0, upBound=1, cat="Integer")
@@ -165,12 +165,40 @@ class panelInicio(wx.Panel):
                         indice = indice + 1;
 
             cosecha.solve()
+            tiempoFinal = time.time()
+
+            tiempoTotal = tiempoFinal - tiempoInicio
 
             info = 'Variables de decision: \n\n'
+            textoArchivo = ''
             for v in X:
                 for dato in v:
                     info += '\t' + dato.name +  '=' +  str(dato.varValue) + '\n'
-            print '\n'
+            for v in P:
+                info += '\t' + v.name +  '=' +  str(v.varValue) + '\n'
+
+
+            resultadoCosecha = []
+            sumaDeUtilidades = 0
+            indiceParcela = 0;
+
+            for i in P:
+                dato = i.varValue
+                resultadoCosecha.append(int(dato))
+                sumaDeUtilidades = sumaDeUtilidades + U[indiceParcela][int(dato)]
+                indiceParcela = indiceParcela + 1;
+
+
+
+            str1 = ' '.join(str(e) for e in resultadoCosecha)
+            info += '\nSuma Utilidades: ' + str(sumaDeUtilidades) + '\n'
+            info += 'Tiempos Cosechas ' + str1 + '\n'
+            info += 'Tiempo Ejecución: ' + str(tiempoTotal*1000) + 'ms'
+
+            textoArchivo = str(sumaDeUtilidades) + '\n' + str1
+
+            GuardarEnArchivo(textoArchivo, 'SalidaResultados')
+
             self.logger.SetValue(info)
 
 
